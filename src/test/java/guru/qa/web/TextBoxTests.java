@@ -1,10 +1,8 @@
 package guru.qa.web;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebElement;
 
 
 import static com.codeborne.selenide.Condition.text;
@@ -35,12 +33,12 @@ public class TextBoxTests {
         $("[id=userEmail]").setValue(email);
         $("[id=currentAddress]").setValue(curAddr);
         $("[id=permanentAddress]").setValue(permAddr);
-        $("[id=submit]").click();
+        $("#submit").scrollIntoView(true).click();
 
         //Asserts
         $("[id=output] [id=name]").shouldHave(text(name));
         $("[id=output]").$("[id=email]").shouldHave(text(email));
         $("[id=output]").$("[id=currentAddress]").shouldHave(text(curAddr));
-        $("[id=output]").$("[id=userEmail]").shouldHave(text(permAddr));
+        $("#output").$("#permanentAddress").shouldHave(text(permAddr));
     }
 }
