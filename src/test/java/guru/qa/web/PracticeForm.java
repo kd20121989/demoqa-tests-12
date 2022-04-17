@@ -1,6 +1,5 @@
 package guru.qa.web;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Configuration;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -40,6 +39,9 @@ public class PracticeForm {
         String cityLucknow = "Lucknow";
 
         open("/automation-practice-form");
+        $(".practice-form-wrapper").shouldHave(text("Student Registration Form"));
+        executeJavaScript("$('footer').remove()");
+        executeJavaScript("$('#fixedban').remove()");
 
         $("#firstName").setValue(firstName);
         $("#lastName").setValue(lastName);
@@ -49,20 +51,14 @@ public class PracticeForm {
         $("#dateOfBirthInput").click();
         $(".react-datepicker__year-select").selectOption(yearOfBirth);
         $(".react-datepicker__month-select").selectOption(monthOfBirth);
-//        $$(".react-datepicker__week").findBy(text(dayOfBirth)).click(); This is not working...
-//      $(byTagAndText("div",(monthOfBirth + " " + dayOfBirth + "th"))).click(); // This is not working
-//        $$(".react-datepicker__week").findBy(text("react-datepicker__day.react-datepicker__day--020")).click(); // This is not working
-        $("#dateOfBirth > div.react-datepicker__tab-loop > div.react-datepicker-popper > div > div > " +
-                "div.react-datepicker__month-container > div.react-datepicker__month > div:nth-child(4) > " +
-                "div.react-datepicker__day.react-datepicker__day--020").click(); //This is disgusting but works...
+        $(String.format(".react-datepicker__day--0%s:not(.react-datepicker__day--outside-month)",dayOfBirth)).click();
         $("#subjectsInput").setValue(subjectMath.substring(0,1)).pressEnter()
                 .setValue(subjectEng.substring(0,1)).pressEnter()
                 .setValue(subjectCompSci.substring(0,3)).pressEnter();
-        $(byTagAndText("label",hobbyRead)).click();
-        $(byTagAndText("label",hobbyMusic)).click();
+        $("#hobbiesWrapper").$(byTagAndText("label",hobbyRead)).click();
+        $("#hobbiesWrapper").$(byTagAndText("label",hobbyMusic)).click();
         $("#uploadPicture").uploadFromClasspath(pictureFile);
         $("#currentAddress").setValue(currentAddress);
-        $(byTitle("Ad.Plus Advertising")).click();
         $("#state").scrollIntoView(true).click();
         $("#state").$(byTagAndText("div",stateUttar)).click();
         $("#city").click();
@@ -71,18 +67,23 @@ public class PracticeForm {
         $("#submit").click();
 
         //Assertions
-        $(".table-responsive").$(byText("Student Name")).sibling(0).shouldHave(text(firstName + " " + lastName));
+        $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
+        $(".table-responsive").$(byText("Student Name"))
+                .sibling(0).shouldHave(text(firstName + " " + lastName));
+//      $(".table-responsive").$(byText("Student Name"))
+//                .parent().shouldHave(text("Alex Egorov"));
         $(".table-responsive").$(byText("Student Email")).sibling(0).shouldHave(text(userEmail));
         $(".table-responsive").$(byText("Gender")).sibling(0).shouldHave(text(gender));
         $(".table-responsive").$(byText("Mobile")).sibling(0).shouldHave(text(phoneNumber));
         $(".table-responsive").$(byText("Date of Birth")).sibling(0).shouldHave(text(dateOfBirth));
         $(".table-responsive").$(byText("Subjects")).sibling(0).shouldHave(text(
-                String.join(", ",subjectMath,subjectEng,subjectCompSci)));
+                String.join(", ", subjectMath, subjectEng, subjectCompSci)));
         $(".table-responsive").$(byText("Hobbies")).sibling(0).shouldHave(text(
-                String.join(", ",hobbyRead,hobbyMusic)));
+                String.join(", ", hobbyRead, hobbyMusic)));
         $(".table-responsive").$(byText("Picture")).sibling(0).shouldHave(text(pictureFile));
         $(".table-responsive").$(byText("Address")).sibling(0).shouldHave(text(currentAddress));
-        $(".table-responsive").$(byText("State and City")).sibling(0).shouldHave(text(stateUttar + " " + cityLucknow));
+        $(".table-responsive").$(byText("State and City"))
+                .sibling(0).shouldHave(text(stateUttar + " " + cityLucknow));
         $(".modal-footer").$("#closeLargeModal").scrollIntoView(true).click();
         $(".practice-form-wrapper").shouldBe(visible);
 
