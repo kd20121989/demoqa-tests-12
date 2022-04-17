@@ -69,7 +69,7 @@ public class PracticeForm {
         //Assertions
         $("#example-modal-sizes-title-lg").shouldHave(text("Thanks for submitting the form"));
         $(".table-responsive").$(byText("Student Name"))
-                .sibling(0).shouldHave(text(firstName + " " + lastName));
+                .sibling(0).shouldHave(text(String.format("%s %s", firstName, lastName)));
 //      $(".table-responsive").$(byText("Student Name"))
 //                .parent().shouldHave(text("Alex Egorov"));
         $(".table-responsive").$(byText("Student Email")).sibling(0).shouldHave(text(userEmail));
